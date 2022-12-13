@@ -12,7 +12,7 @@ import org.bedracket.eventbus.Event;
  * <br>
  **/
 public class EntityEvent extends Event {
-    private final Entity entity;
+    protected final Entity entity;
 
     public EntityEvent(Entity entity) {
         this.entity = entity;
