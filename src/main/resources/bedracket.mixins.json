@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "org.bedracket.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "bedracket.refmap.json",
+  "refmap": "bedracket-api-refmap.json",
   "mixins": [
     "event.MixinArmorStandEntity",
     "event.MixinEndPortalBlock",
