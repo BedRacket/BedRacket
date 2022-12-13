@@ -33,7 +33,7 @@ public abstract class MixinLivingEntity {
         BedRacket.EVENT_BUS.post(LivingJumpEvent.class, new LivingJumpEvent(((LivingEntity) (Object) this)));
     }
 
-    @Inject(method = "getAttackDistanceScalingFactor", at = @At("TAIL"))
+    @Inject(method = "getAttackDistanceScalingFactor", at = @At("TAIL"), cancellable = true)
     private void callLivingVisibilityEvent(Entity entity, CallbackInfoReturnable<Double> cir) throws EventException {
         double prefix$d = 1.0;
         if (((LivingEntity) (Object) this).isSneaky()) {

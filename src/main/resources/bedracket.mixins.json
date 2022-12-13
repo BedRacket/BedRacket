@@ -6,19 +6,23 @@
   "refmap": "bedracket.refmap.json",
   "mixins": [
     "event.MixinArmorStandEntity",
+    "event.MixinEndPortalBlock",
     "event.MixinEntity",
+    "event.MixinFireworkRocketItem",
     "event.MixinFishingBobberEntity",
     "event.MixinItemEntity",
+    "event.MixinItemStack",
     "event.MixinLivingEntity",
     "event.MixinMobEntity",
+    "event.MixinMobSpawnerLogic",
+    "event.MixinNetherPortalBlock",
     "event.MixinPlayerEntity",
+    "event.MixinProjectileEntity",
+    "event.MixinRaid",
     "event.MixinServerEntityHandler",
     "event.MixinServerPlayerInteractionManager",
     "event.MixinServerWorld",
     "event.MixinTameableEntity"
-  ],
-  "client": [
-    "event.MixinClientWorld"
   ],
   "injectors": {
     "defaultRequire": 1
