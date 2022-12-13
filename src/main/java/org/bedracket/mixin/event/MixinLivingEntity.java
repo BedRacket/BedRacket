@@ -1,0 +1,82 @@
+package org.bedracket.mixin.event;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import org.bedracket.entity_events.living.LivingHealEvent;
+import org.bedracket.entity_events.living.LivingJumpEvent;
+import org.bedracket.entity_events.living.LivingTickEvent;
+import org.bedracket.entity_events.living.LivingVisibilityEvent;
+import org.bedracket.eventbus.BedRacket;
+import org.bedracket.eventbus.EventException;
+import org.bedracket.eventbus.EventInfo;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@EventInfo(events = "LivingTickEvent, LivingJumpEvent, LivingVisibilityEvent, LivingHealEvent")
+@Mixin(LivingEntity.class)
+public abstract class MixinLivingEntity {
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void callLivingTickEvent(CallbackInfo ci) throws EventException {
+        BedRacket.EVENT_BUS.post(LivingTickEvent.class, new LivingTickEvent(((LivingEntity) (Object) this)));
+    }
+
+    @Inject(method = "jump", at = @At("TAIL"))
+    private void callLivingJumpEvent(CallbackInfo ci) throws EventException {
+        BedRacket.EVENT_BUS.post(LivingJumpEvent.class, new LivingJumpEvent(((LivingEntity) (Object) this)));
+    }
+
+    @Inject(method = "getAttackDistanceScalingFactor", at = @At("TAIL"))
+    private void callLivingVisibilityEvent(Entity entity, CallbackInfoReturnable<Double> cir) throws EventException {
+        double prefix$d = 1.0;
+        if (((LivingEntity) (Object) this).isSneaky()) {
+            prefix$d *= 0.8;
+        }
+
+        if (((LivingEntity) (Object) this).isInvisible()) {
+            float prefix$f = ((LivingEntity) (Object) this).getArmorVisibility();
+            if (prefix$f < 0.1F) {
+                prefix$f = 0.1F;
+            }
+
+            prefix$d *= 0.7 * (double)prefix$f;
+        }
+
+        if (entity != null) {
+            ItemStack itemStack = ((LivingEntity) (Object) this).getEquippedStack(EquipmentSlot.HEAD);
+            EntityType<?> entityType = entity.getType();
+            if (entityType == EntityType.SKELETON && itemStack.isOf(Items.SKELETON_SKULL)
+                    || entityType == EntityType.ZOMBIE && itemStack.isOf(Items.ZOMBIE_HEAD)
+                    || entityType == EntityType.PIGLIN && itemStack.isOf(Items.PIGLIN_HEAD)
+                    || entityType == EntityType.PIGLIN_BRUTE && itemStack.isOf(Items.PIGLIN_HEAD)
+                    || entityType == EntityType.CREEPER && itemStack.isOf(Items.CREEPER_HEAD)) {
+                prefix$d *= 0.5;
+            }
+        }
+
+        LivingVisibilityEvent bedracketEvent = (LivingVisibilityEvent) BedRacket.EVENT_BUS.post(LivingVisibilityEvent.class,
+                new LivingVisibilityEvent(((LivingEntity) (Object) this), entity, prefix$d));
+        cir.setReturnValue(Math.max(0, bedracketEvent.getVisibilityModifier()));
+    }
+
+    @Inject(method = "heal",at=@At("HEAD"),cancellable = true)
+    private void callLivingHealEvent(float amount, CallbackInfo ci) throws EventException {
+        LivingHealEvent bedracketEvent =
+                (LivingHealEvent) BedRacket.EVENT_BUS
+                        .post(LivingHealEvent.class,
+                                new LivingHealEvent(((LivingEntity) (Object) this), amount));
+
+        amount = bedracketEvent.getAmount();
+        if (amount <= 0) {
+            ci.cancel();
+        }
+    }
+
+}

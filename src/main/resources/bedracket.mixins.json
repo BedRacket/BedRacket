@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.bedracket.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "bedracket.refmap.json",
+  "mixins": [
+    "event.MixinArmorStandEntity",
+    "event.MixinEntity",
+    "event.MixinFishingBobberEntity",
+    "event.MixinItemEntity",
+    "event.MixinLivingEntity",
+    "event.MixinMobEntity",
+    "event.MixinPlayerEntity",
+    "event.MixinServerEntityHandler",
+    "event.MixinServerPlayerInteractionManager",
+    "event.MixinServerWorld",
+    "event.MixinTameableEntity"
+  ],
+  "client": [
+    "event.MixinClientWorld"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
