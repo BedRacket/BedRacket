@@ -20,6 +20,11 @@
   "mixins": [
     "bedracket.mixins.json"
   ],
+  "entrypoints": {
+    "main": [
+      "org.bedracket.BedRacketMod"
+    ]
+  },
   "depends": {
     "fabricloader": ">=0.14.10",
     "java": ">=17",

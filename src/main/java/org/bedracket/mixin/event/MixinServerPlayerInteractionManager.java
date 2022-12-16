@@ -62,7 +62,7 @@ public abstract class MixinServerPlayerInteractionManager {
             BlockBreakEvent brEvent =
                     (BlockBreakEvent) BedRacket.EVENT_BUS.post(BlockBreakEvent.class,
                             new BlockBreakEvent(
-                                    player.getBlockStateAtPos().getBlock(), player));
+                                    this.world.getBlockState(pos).getBlock(), player));
             // Sword + Creative mode pre-cancel
             brEvent.setCancelled(isSwordNoBreak);
 

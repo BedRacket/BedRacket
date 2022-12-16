@@ -38,7 +38,6 @@ public abstract class MixinServerWorld {
         }
     }
 
-    /**
     @Inject(method = "addPlayer", at = @At("HEAD"), cancellable = true)
     private void onAddPlayer(ServerPlayerEntity player, CallbackInfo ci) throws EventException {
         EntityJoinWorldEvent bedracketEvent =
@@ -47,7 +46,7 @@ public abstract class MixinServerWorld {
         if (bedracketEvent.isCancelled()) {
             ci.cancel();
         }
-    }*/
+    }
 
     @Inject(method = "spawnEntity", at = @At("HEAD"))
     private void onSpawnEntity(Entity entity, CallbackInfoReturnable<Boolean> cir) throws EventException {
