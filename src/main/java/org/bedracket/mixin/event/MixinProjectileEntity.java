@@ -1,9 +1,7 @@
 package org.bedracket.mixin.event;
 
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.World;
 import org.bedracket.entity_events.EntityShootEvent;
 import org.bedracket.eventbus.BedRacket;
 import org.bedracket.eventbus.EventException;

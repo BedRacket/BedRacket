@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "bedracket-api-refmap.json",
   "mixins": [
+    "bugfix.MixinAbstractFireBlock",
+    "bugfix.MixinPiglinBrain",
     "event.MixinArmorStandEntity",
     "event.MixinEndPortalBlock",
     "event.MixinEntity",
