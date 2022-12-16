@@ -1,25 +1,27 @@
 package org.bedracket;
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import org.bedracket.command.ModInfoCommand;
 import org.bedracket.eventbus.BedRacket;
-import org.bedracket.test.TestListener;
+import org.bedracket.util.BedRacketConfig;
+import org.bedracket.util.Configuration;
 
 public class BedRacketMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        MixinExtrasBootstrap.init();
+        new Configuration(BedRacketConfig.class, "bedracket");
         loadModsList();
         CommandRegistrationCallback.
                 EVENT.register((dispatcher, registryAccess, environment) -> {
                     dispatcher.register(ModInfoCommand.COMMAND);
                 });
         final BedRacket bus = BedRacket.EVENT_BUS;
-        int r = bus.addListener(new TestListener());
-        TestListener.LOGGER.info("Registered " + r + " BedRacket Events");
     }
 
     public static void loadModsList() {
