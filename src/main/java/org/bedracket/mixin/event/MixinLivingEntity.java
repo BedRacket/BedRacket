@@ -4,12 +4,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import org.bedracket.entity_events.living.LivingHealEvent;
-import org.bedracket.entity_events.living.LivingJumpEvent;
-import org.bedracket.entity_events.living.LivingTickEvent;
-import org.bedracket.entity_events.living.LivingVisibilityEvent;
+import org.bedracket.entity_events.living.*;
 import org.bedracket.eventbus.BedRacket;
 import org.bedracket.eventbus.EventException;
 import org.bedracket.eventbus.EventInfo;
@@ -19,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@EventInfo(events = "LivingTickEvent, LivingJumpEvent, LivingVisibilityEvent, LivingHealEvent")
+@EventInfo(events = "LivingTickEvent, LivingJumpEvent, LivingVisibilityEvent, LivingHealEvent, LivingHurtEvent")
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity {
 
@@ -79,4 +77,15 @@ public abstract class MixinLivingEntity {
         }
     }
 
+    @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
+    private void callLivingHurtEvent(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) throws EventException {
+        LivingHurtEvent brEvent =
+                (LivingHurtEvent) BedRacket.EVENT_BUS.post(
+                        LivingHurtEvent.class,
+                        new LivingHurtEvent(((LivingEntity) (Object) this), source, amount)
+                );
+        if (brEvent.isCancelled()) {
+            cir.setReturnValue(false);
+        }
+    }
 }

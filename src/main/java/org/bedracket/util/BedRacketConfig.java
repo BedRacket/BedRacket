@@ -55,4 +55,11 @@ public class BedRacketConfig {
             comment = "Decide wheat growth rate")
     public static int wheatModifier = 100;
 
+    @Config(config = "bedracket", category = "misc",
+            comment = "Decide you can use the old fish farm, if true, it will back to 1.12.2's fishing system")
+    public static boolean oldFishingFarm = false;
+
+    @Config(config = "bedracket", category = "misc", comment = "Decide thunderChance rate")
+    public static int thunderChance = 100;
+
 }
